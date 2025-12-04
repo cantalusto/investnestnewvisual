@@ -79,14 +79,16 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed w-full z-50 transition-all duration-500 ease-in-out ${
-        isScrolled ? 'bg-black/90 backdrop-blur-md py-4 shadow-lg shadow-neo-green/10' : 'bg-transparent py-6'
+        isScrolled 
+          ? 'bg-black/90 backdrop-blur-md py-4 shadow-lg shadow-neo-green/10' 
+          : 'md:bg-transparent bg-black/90 md:py-6 py-4 md:shadow-none shadow-lg shadow-neo-green/10 backdrop-blur-md'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Logo - só aparece após scroll */}
+          {/* Logo - desktop: aparece após scroll | mobile: sempre aparece após scroll */}
           <div className={`flex items-center gap-3 group cursor-pointer transition-all duration-500 ${
-            isScrolled ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10 pointer-events-none'
+            isScrolled ? 'opacity-100 translate-x-0' : 'md:opacity-0 md:-translate-x-10 opacity-0 -translate-x-10 pointer-events-none'
           }`}>
             <img 
               src="/INVESTNEST - icon.svg" 
