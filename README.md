@@ -1,20 +1,90 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# InvestNest
 
-# Run and deploy your AI Studio app
+Plataforma de tecnologia financeira voltada à inovação no mercado de investimentos descentralizados (DeFi).
 
-This contains everything you need to run your app locally.
+## 🚀 Tecnologias
 
-View your app in AI Studio: https://ai.studio/apps/drive/1ejSz29ZGYEZ2_NK1MVeefVslTHW0YGwH
+- **React 18+** com TypeScript
+- **Vite** - Build tool e dev server
+- **Tailwind CSS** - Estilização
+- **Framer Motion** - Animações
+- **Lucide React** - Ícones
 
-## Run Locally
+## 📋 Pré-requisitos
 
-**Prerequisites:**  Node.js
+- Node.js (versão 16 ou superior)
+- npm ou yarn
 
+## 🔧 Instalação
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/cantalusto/investnestnewvisual.git
+   cd investnestnewvisual
+   ```
+
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+
+3. Execute o projeto:
+   ```bash
+   npm run dev
+   ```
+
+4. Acesse no navegador:
+   ```
+   http://localhost:5173
+   ```
+
+## 🏗️ Build para Produção
+
+```bash
+npm run build
+```
+
+Os arquivos otimizados serão gerados na pasta `dist/`.
+
+## 📦 Estrutura do Projeto
+
+```
+investnest/
+├── components/
+│   ├── layout/
+│   │   └── Navbar.tsx
+│   ├── pages/
+│   │   └── TermsOfUse.tsx
+│   ├── sections/
+│   │   ├── Contact.tsx
+│   │   ├── Features.tsx
+│   │   ├── Hero.tsx
+│   │   ├── Plans.tsx
+│   │   └── Ticker.tsx
+│   └── ui/
+│       ├── CustomCursor.tsx
+│       ├── GlitchButton.tsx
+│       ├── MatrixRain.tsx
+│       └── TypingText.tsx
+├── public/
+│   ├── INVESTNEST - icon.svg
+│   └── INVESTNEST - LOGO-cropped.svg
+├── App.tsx
+├── index.tsx
+└── types.ts
+```
+
+## 🎨 Funcionalidades
+
+- ✅ Design cyberpunk com tema verde neon
+- ✅ Navbar responsiva com scroll detection
+- ✅ Animações de texto e cursor customizado
+- ✅ Calculadora de investimentos interativa
+- ✅ 3 planos de investimento (Padrão, Juros Compostos, Renda Flexível)
+- ✅ Seção de FAQ e Contato
+- ✅ Termos de Uso com download em PDF
+- ✅ Totalmente responsivo
+
+## 📄 Licença
+
+© 2025 InvestNest. Todos os direitos reservados.
