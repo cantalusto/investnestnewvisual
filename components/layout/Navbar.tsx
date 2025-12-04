@@ -135,7 +135,7 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden pt-4 pb-4 animate-fade-in">
+          <div className="md:hidden pt-4 pb-4 animate-fade-in bg-black/95 backdrop-blur-md -mx-4 px-4 sm:-mx-6 sm:px-6 rounded-b-lg">
             <div className="flex flex-col gap-4">
               {navItems.map((item) => (
                 <a
