@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/INVESTNEST - icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InvestNest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baumans&family=Fira+Code:wght@300;400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'neo-black': '#050505',
+              'neo-dark': '#0a0a0a',
+              'neo-green': '#00FF41',
+              'neo-green-dim': '#0D3B0E',
+              'neo-toxic': '#39FF14',
+            },
+            fontFamily: {
+              mono: ['"Fira Code"', 'monospace'],
+              display: ['"Share Tech Mono"', 'monospace'],
+              baumans: ['"Baumans"', 'cursive'],
+            },
+            animation: {
+              'glitch-1': 'glitch-anim-1 2s infinite linear alternate-reverse',
+              'glitch-2': 'glitch-anim-2 3s infinite linear alternate-reverse',
+            },
+            keyframes: {
+              'glitch-anim-1': {
+                '0%': { clipPath: 'inset(20% 0 80% 0)' },
+                '20%': { clipPath: 'inset(60% 0 1% 0)' },
+                '40%': { clipPath: 'inset(40% 0 50% 0)' },
+                '60%': { clipPath: 'inset(80% 0 5% 0)' },
+                '80%': { clipPath: 'inset(10% 0 70% 0)' },
+                '100%': { clipPath: 'inset(30% 0 20% 0)' },
+              },
+              'glitch-anim-2': {
+                '0%': { clipPath: 'inset(10% 0 60% 0)' },
+                '20%': { clipPath: 'inset(30% 0 10% 0)' },
+                '40%': { clipPath: 'inset(70% 0 20% 0)' },
+                '60%': { clipPath: 'inset(20% 0 50% 0)' },
+                '80%': { clipPath: 'inset(80% 0 10% 0)' },
+                '100%': { clipPath: 'inset(5% 0 80% 0)' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background-color: #050505;
+        color: #e5e5e5;
+        overflow-x: hidden;
+      }
+      /* Hide default cursor to use custom one */
+      @media (pointer: fine) {
+        body {
+          cursor: none;
+        }
+      }
+      
+      /* Scrollbar customization */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0a0a0a;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #0D3B0E;
+        border: 1px solid #00FF41;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #00FF41;
+      }
+      
+      /* Input range reset */
+      input[type=range] {
+        -webkit-appearance: none; 
+        background: transparent; 
+      }
+      
+      input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+      }
+
+      input[type=range]:focus {
+        outline: none; 
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.25",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
