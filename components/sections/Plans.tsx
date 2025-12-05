@@ -8,7 +8,7 @@ const Plans: React.FC = () => {
     const [selectedPlan, setSelectedPlan] = useState<PlanType>('simple');
     
     // State for Simulator
-    const [amount, setAmount] = useState<number>(100);
+    const [amount, setAmount] = useState<number>(1000);
     const [days, setDays] = useState<number>(90); // For Plan 2
     const [withdrawalRate, setWithdrawalRate] = useState<number>(5); // For Plan 3 (1-9%)
     const [simulationDays, setSimulationDays] = useState<number>(350); // For Plan 3 projection
@@ -27,7 +27,12 @@ const Plans: React.FC = () => {
 
     // Calculation Logic
     useEffect(() => {
-        const BASE_YIELD = 0.10; // 10% per 30 days
+        let BASE_YIELD = 0.10; // Default: 10% per 30 days
+        
+        // Ajustar taxa conforme o plano
+        if (selectedPlan === 'compound' || selectedPlan === 'income') {
+            BASE_YIELD = 0.12; // 12% para Juros Compostos e Renda Flexível
+        }
 
         if (selectedPlan === 'simple') {
             // PLAN 1: 30 Days Fixed, 10% payout
@@ -62,35 +67,32 @@ const Plans: React.FC = () => {
             });
         } 
         else if (selectedPlan === 'income') {
-            // PLAN 3: Split (Withdraw % vs Reinvest %)
-            // withdrawalRate (e.g. 5%) is the CASH PAYOUT per month
-            // reinvestRate = 10% - 5% = 5% added to principal
+            // PLAN 3: Renda Flexível - Prazo Flexível
+            // Mostra renda mensal e crescimento ao longo dos meses
             
             const payoutRate = withdrawalRate / 100;
             const reinvestRate = BASE_YIELD - payoutRate;
 
-            let currentBalance = amount;
-            let totalCashOut = 0;
-            const cycles = Math.floor(simulationDays / 30); // Cada ciclo é 30 dias
-
-            for (let i = 0; i < cycles; i++) {
-                const monthlyYieldTotal = currentBalance * BASE_YIELD;
-                const monthlyPayout = currentBalance * payoutRate;
-                const monthlyReinvestAmount = monthlyYieldTotal - monthlyPayout; // Should match currentBalance * reinvestRate
-
-                totalCashOut += monthlyPayout;
-                currentBalance += monthlyReinvestAmount;
+            // Calcular renda do primeiro mês
+            const monthlyIncome = amount * payoutRate;
+            
+            // Simular crescimento em 6 meses para mostrar evolução
+            let balanceAfter6Months = amount;
+            for (let i = 0; i < 6; i++) {
+                const monthlyYield = balanceAfter6Months * BASE_YIELD;
+                const monthlyPayout = balanceAfter6Months * payoutRate;
+                const reinvestAmount = monthlyYield - monthlyPayout;
+                balanceAfter6Months += reinvestAmount;
             }
-
-            const totalProfit = (currentBalance - amount) + totalCashOut;
-            const totalPercent = (totalProfit / amount) * 100;
+            
+            const incomeAfter6Months = balanceAfter6Months * payoutRate;
 
             setResults({
-                finalBalance: currentBalance,
-                totalWithdrawn: totalCashOut,
-                totalYield: totalProfit,
+                finalBalance: balanceAfter6Months,
+                totalWithdrawn: monthlyIncome, // Renda mensal inicial
+                totalYield: incomeAfter6Months, // Renda após 6 meses
                 monthlyReinvest: (reinvestRate * 100),
-                totalPercent: totalPercent
+                totalPercent: ((balanceAfter6Months - amount) / amount) * 100
             });
         }
 
@@ -163,13 +165,13 @@ const Plans: React.FC = () => {
                                 <span className="text-neo-green font-bold">→</span> Você investe R$ 1.000
                             </p>
                             <p>
-                                <span className="text-neo-green font-bold">→</span> Após 30 dias: R$ 1.100
+                                <span className="text-neo-green font-bold">→</span> Após 30 dias: R$ 1.120
                             </p>
                             <p>
-                                <span className="text-neo-green font-bold">→</span> Após 60 dias: R$ 1.210 (10% sobre R$ 1.100)
+                                <span className="text-neo-green font-bold">→</span> Após 60 dias: R$ 1.254 (12% sobre R$ 1.120)
                             </p>
                             <p>
-                                <span className="text-neo-green font-bold">→</span> Após 90 dias: R$ 1.331 (10% sobre R$ 1.210)
+                                <span className="text-neo-green font-bold">→</span> Após 90 dias: R$ 1.405 (12% sobre R$ 1.254)
                             </p>
                             <p className="text-white/80 pt-2 border-t border-gray-800">
                                 <strong className="text-neo-green">Ideal para:</strong> Crescimento acelerado com reinvestimento automático de 100% dos lucros.
@@ -188,7 +190,7 @@ const Plans: React.FC = () => {
                             </div>
                             <div>
                                 <h4 className="font-display font-bold text-white mb-1">Renda Flexível</h4>
-                                <p className="text-xs text-neo-green font-mono">Personalizável • 1-9% de Saque</p>
+                                <p className="text-xs text-neo-green font-mono">Personalizável • 1-10% de Saque • Prazo Flexível</p>
                             </div>
                         </div>
                         <div className="space-y-3 text-sm font-mono text-gray-400 leading-relaxed">
@@ -196,13 +198,13 @@ const Plans: React.FC = () => {
                                 <span className="text-neo-green font-bold">→</span> Você investe R$ 1.000 e escolhe sacar 5%
                             </p>
                             <p>
-                                <span className="text-neo-green font-bold">→</span> Após 30 dias: Saca R$ 50 + Reinveste R$ 50
+                                <span className="text-neo-green font-bold">→</span> Rendimento mensal: 12% (R$ 120)
                             </p>
                             <p>
-                                <span className="text-neo-green font-bold">→</span> Novo saldo: R$ 1.050
+                                <span className="text-neo-green font-bold">→</span> Após 30 dias: Saca R$ 50 + Reinveste R$ 70
                             </p>
                             <p>
-                                <span className="text-neo-green font-bold">→</span> Após 60 dias: Saca R$ 52,50 + Reinveste R$ 52,50
+                                <span className="text-neo-green font-bold">→</span> Novo saldo: R$ 1.070 | Renda cresce mensalmente
                             </p>
                             <p className="text-white/80 pt-2 border-t border-gray-800">
                                 <strong className="text-neo-green">Ideal para:</strong> Renda mensal recorrente enquanto o capital cresce.
@@ -261,7 +263,7 @@ const Plans: React.FC = () => {
                     </div>
                     <h3 className={`text-lg font-display font-bold mb-2 ${selectedPlan === 'income' ? 'text-white' : 'text-gray-400'}`}>Renda Flexível</h3>
                     <p className={`text-sm font-mono leading-relaxed ${selectedPlan === 'income' ? 'text-gray-300' : 'text-gray-400'}`}>
-                        Controle total. Escolha quanto sacar (1-9%) e quanto reinvestir mensalmente para crescer o bolo.
+                        Controle total. Escolha quanto sacar (1-10%) e quanto reinvestir mensalmente para crescer o bolo.
                     </p>
                 </button>
             </div>
@@ -290,11 +292,11 @@ const Plans: React.FC = () => {
                                     <div className="relative">
                                         <input
                                             type="number"
-                                            min="100"
+                                            min="10"
                                             max="500000"
-                                            step="100"
-                                            value={amount}
-                                            onChange={(e) => setAmount(Math.max(100, Math.min(500000, Number(e.target.value) || 100)))}
+                                            step="10"
+                                            value={amount || ''}
+                                            onChange={(e) => setAmount(Number(e.target.value) || 0)}
                                             className="font-mono text-white text-xl font-bold bg-neo-black/50 px-4 py-1 rounded border-2 border-neo-green/20 hover:border-neo-green/40 focus:border-neo-green focus:outline-none transition-colors w-48 text-right"
                                         />
                                         <div className="absolute -bottom-5 right-0 text-xs text-neo-green/60 font-mono flex items-center gap-1">
@@ -304,12 +306,12 @@ const Plans: React.FC = () => {
                                 </div>
                                 <div className="relative">
                                     <input 
-                                        type="range" min="100" max="500000" step="100"
+                                        type="range" min="10" max="500000" step="10"
                                         value={amount} onChange={(e) => setAmount(Number(e.target.value))}
                                         className="w-full h-2 bg-neo-black rounded-lg appearance-none cursor-pointer border border-neo-green/20 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:bg-neo-green [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-black hover:[&::-webkit-slider-thumb]:scale-110 transition-all"
                                     />
                                     <div className="flex justify-between text-xs text-gray-500 font-mono mt-1">
-                                        <span>R$ 100</span>
+                                        <span>R$ 10</span>
                                         <span>R$ 500.000</span>
                                     </div>
                                 </div>
@@ -371,37 +373,23 @@ const Plans: React.FC = () => {
                                             </div>
                                         </div>
                                         <input 
-                                            type="range" min="1" max="9" step="1"
+                                            type="range" min="1" max="10" step="1"
                                             value={withdrawalRate} onChange={(e) => setWithdrawalRate(Number(e.target.value))}
                                             className="w-full h-2 bg-neo-black rounded-lg appearance-none cursor-pointer border border-neo-green/20 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:bg-neo-toxic [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-black hover:[&::-webkit-slider-thumb]:scale-110 transition-all"
                                         />
                                         <div className="flex justify-between text-xs font-mono">
-                                            <span className="text-gray-500">Reinveste {10 - withdrawalRate}%</span>
+                                            <span className="text-gray-500">Reinveste {12 - withdrawalRate}%</span>
                                             <span className="text-neo-toxic">Saca {withdrawalRate}%</span>
                                         </div>
                                     </div>
 
-                                    <div className="space-y-3 pt-4 border-t border-neo-green/20 bg-neo-green/5 p-4 rounded-lg">
-                                         <div className="flex justify-between items-center mb-2">
-                                            <label className="text-neo-green font-mono text-xs uppercase flex items-center gap-2">
-                                                <Calendar size={14} />
-                                                Simular projeção para:
-                                            </label>
-                                            <span className="text-white font-mono text-lg font-bold bg-neo-black/50 px-3 py-1 rounded border border-neo-green/30">{simulationDays} Dias</span>
+                                    <div className="bg-neo-green/5 p-4 rounded border border-neo-green/20 mt-4">
+                                        <div className="flex items-center text-neo-green mb-2">
+                                            <Lock size={16} className="mr-2" />
+                                            <span className="font-bold font-mono text-sm">PRAZO FLEXÍVEL</span>
                                         </div>
-                                        <div className="relative">
-                                            <input 
-                                                type="range" min="30" max="720" step="30"
-                                                value={simulationDays} onChange={(e) => setSimulationDays(Number(e.target.value))}
-                                                className="w-full h-2 bg-neo-black rounded-lg appearance-none cursor-pointer border border-neo-green/30 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:bg-neo-green [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-black hover:[&::-webkit-slider-thumb]:scale-110 transition-all"
-                                            />
-                                            <div className="flex justify-between text-xs text-gray-500 font-mono mt-1">
-                                                <span>30 dias</span>
-                                                <span>720 dias</span>
-                                            </div>
-                                        </div>
-                                        <p className="text-xs text-neo-green/70 font-mono flex items-center gap-1">
-                                            <span className="animate-pulse">↔</span> Arraste o controle para ajustar o período
+                                        <p className="text-xs text-gray-400 font-mono leading-relaxed">
+                                            Querendo realizar o saque total, você terá que esperar o dia do pagamento. Você pode solicitar e receber todo o dinheiro no dia do pagamento.
                                         </p>
                                     </div>
                                 </>
@@ -415,6 +403,18 @@ const Plans: React.FC = () => {
                         <div className="absolute top-0 right-0 w-64 h-64 bg-neo-green/5 rounded-full filter blur-3xl pointer-events-none -translate-y-1/2 translate-x-1/2"></div>
                         <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-neo-green to-transparent"></div>
 
+                        {amount < 100 ? (
+                            <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
+                                <div className="text-6xl text-gray-700">💰</div>
+                                <h4 className="font-mono text-gray-500 uppercase tracking-widest text-sm">
+                                    Valor Mínimo: R$ 100
+                                </h4>
+                                <p className="font-mono text-gray-600 text-xs max-w-xs">
+                                    Digite um valor igual ou superior a R$ 100 para visualizar as projeções de investimento.
+                                </p>
+                            </div>
+                        ) : (
+                        <>
                         <div>
                             <h4 className="font-mono text-gray-500 uppercase tracking-widest text-xs mb-8 flex items-center">
                                 <ArrowRight size={14} className="mr-2 text-neo-green" />
@@ -437,19 +437,30 @@ const Plans: React.FC = () => {
                                 <div className="grid grid-cols-1 gap-4">
                                     {selectedPlan === 'income' ? (
                                         <>
-                                            <div className="bg-neo-dark/50 p-4 rounded border border-gray-800 flex justify-between items-center">
+                                            <div className="bg-neo-dark/50 p-4 rounded border border-neo-green/20 flex justify-between items-center">
                                                 <div>
-                                                    <p className="text-gray-500 font-mono text-[10px] uppercase mb-1">Total Recebido em Conta</p>
-                                                    <p className="text-white font-mono text-lg font-bold">{formatCurrency(results.totalWithdrawn)}</p>
+                                                    <p className="text-gray-500 font-mono text-[10px] uppercase mb-1">Renda Mensal (Mês 1)</p>
+                                                    <p className="text-neo-toxic font-mono text-lg font-bold">{formatCurrency(results.totalWithdrawn)}</p>
                                                 </div>
                                                 <TrendingUp className="text-neo-toxic opacity-50" />
                                             </div>
                                             <div className="bg-neo-dark/50 p-4 rounded border border-gray-800 flex justify-between items-center">
                                                 <div>
-                                                    <p className="text-gray-500 font-mono text-[10px] uppercase mb-1">Saldo Acumulado (Para Saque Futuro)</p>
-                                                    <p className="text-white font-mono text-lg font-bold">{formatCurrency(results.finalBalance)}</p>
+                                                    <p className="text-gray-500 font-mono text-[10px] uppercase mb-1">Renda Mensal (Após 6 meses)</p>
+                                                    <p className="text-neo-green font-mono text-lg font-bold">{formatCurrency(results.totalYield)}</p>
                                                 </div>
-                                                <RefreshCw className="text-neo-green opacity-50" />
+                                                <TrendingUp className="text-neo-green opacity-50" />
+                                            </div>
+                                            <div className="bg-neo-dark/50 p-4 rounded border border-gray-800">
+                                                <p className="text-gray-500 font-mono text-[10px] uppercase mb-2">Crescimento do Capital</p>
+                                                <div className="flex justify-between items-center mb-1">
+                                                    <span className="text-xs font-mono text-gray-400">Inicial:</span>
+                                                    <span className="text-white font-mono text-sm">{formatCurrency(amount)}</span>
+                                                </div>
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-xs font-mono text-gray-400">Após 6 meses:</span>
+                                                    <span className="text-neo-green font-mono text-sm font-bold">{formatCurrency(results.finalBalance)}</span>
+                                                </div>
                                             </div>
                                         </>
                                     ) : (
@@ -468,9 +479,11 @@ const Plans: React.FC = () => {
                         <div className="mt-12">
                             <GlitchButton text="Iniciar Contrato" className="w-full" />
                             <p className="text-[10px] text-center text-gray-600 font-mono mt-4">
-                                *Valores estimados baseados na rentabilidade fixa de 10% a.m.
+                                *Valores estimados. Padrão: 10% a.m. | Compostos e Renda Flexível: 12% a.m.
                             </p>
                         </div>
+                        </>
+                        )}
                     </div>
                 </div>
             </div>
