@@ -47,12 +47,21 @@ const Plans: React.FC = () => {
         } 
         else if (selectedPlan === 'compound') {
             // PLAN 2: Multi-cycle, 100% Reinvest until end
+            // Inicia juros compostos apenas a partir de 60 dias
             const cycles = Math.floor(days / 30);
             let currentBalance = amount;
             
-            // Compound Interest Formula: P * (1 + r)^n
-            for (let i = 0; i < cycles; i++) {
-                currentBalance = currentBalance * (1 + BASE_YIELD);
+            if (days < 60) {
+                // Antes de 60 dias, aplica apenas juros simples (sem compor)
+                const cyclesSimple = Math.floor(days / 30);
+                const profit = amount * BASE_YIELD * cyclesSimple;
+                currentBalance = amount + profit;
+            } else {
+                // A partir de 60 dias (2 ciclos), inicia juros compostos
+                // Compound Interest Formula: P * (1 + r)^n
+                for (let i = 0; i < cycles; i++) {
+                    currentBalance = currentBalance * (1 + BASE_YIELD);
+                }
             }
 
             const totalProfit = currentBalance - amount;
@@ -180,37 +189,39 @@ const Plans: React.FC = () => {
                     </button>
 
                     {/* Plano 3 */}
-                    <button 
-                        onClick={() => setSelectedPlan('income')}
-                        className="bg-neo-black/50 border border-neo-green/10 rounded-lg p-6 hover:border-neo-green/30 transition-all text-left w-full cursor-pointer hover:scale-[1.02] transform"
-                    >
+                    <div className="relative bg-neo-black/30 border border-gray-800/50 rounded-lg p-6 text-left w-full opacity-60 cursor-not-allowed">
+                        <div className="absolute top-2 right-2">
+                            <span className="bg-neo-green/20 text-neo-green text-[10px] font-mono font-bold px-2 py-1 rounded border border-neo-green/40">
+                                EM BREVE
+                            </span>
+                        </div>
                         <div className="flex items-start gap-3 mb-4">
-                            <div className="w-10 h-10 bg-neo-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <RefreshCw className="text-neo-green" size={20} />
+                            <div className="w-10 h-10 bg-gray-800/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <RefreshCw className="text-gray-600" size={20} />
                             </div>
                             <div>
-                                <h4 className="font-display font-bold text-white mb-1">Renda Flexível</h4>
-                                <p className="text-xs text-neo-green font-mono">Personalizável • 1-10% de Saque • Prazo Flexível</p>
+                                <h4 className="font-display font-bold text-gray-500 mb-1">Renda Flexível</h4>
+                                <p className="text-xs text-gray-600 font-mono">Personalizável • 1-10% de Saque • Prazo Flexível</p>
                             </div>
                         </div>
-                        <div className="space-y-3 text-sm font-mono text-gray-400 leading-relaxed">
+                        <div className="space-y-3 text-sm font-mono text-gray-600 leading-relaxed">
                             <p>
-                                <span className="text-neo-green font-bold">→</span> Você investe R$ 1.000 e escolhe sacar 5%
+                                <span className="text-gray-600 font-bold">→</span> Você investe R$ 1.000 e escolhe sacar 5%
                             </p>
                             <p>
-                                <span className="text-neo-green font-bold">→</span> Rendimento mensal: 12% (R$ 120)
+                                <span className="text-gray-600 font-bold">→</span> Rendimento mensal: 12% (R$ 120)
                             </p>
                             <p>
-                                <span className="text-neo-green font-bold">→</span> Após 30 dias: Saca R$ 50 + Reinveste R$ 70
+                                <span className="text-gray-600 font-bold">→</span> Após 30 dias: Saca R$ 50 + Reinveste R$ 70
                             </p>
                             <p>
-                                <span className="text-neo-green font-bold">→</span> Novo saldo: R$ 1.070 | Renda cresce mensalmente
+                                <span className="text-gray-600 font-bold">→</span> Novo saldo: R$ 1.070 | Renda cresce mensalmente
                             </p>
-                            <p className="text-white/80 pt-2 border-t border-gray-800">
-                                <strong className="text-neo-green">Ideal para:</strong> Renda mensal recorrente enquanto o capital cresce.
+                            <p className="text-gray-600 pt-2 border-t border-gray-800">
+                                <strong className="text-gray-500">Ideal para:</strong> Renda mensal recorrente enquanto o capital cresce.
                             </p>
                         </div>
-                    </button>
+                    </div>
                 </div>
 
                 <div className="mt-6 bg-neo-green/5 border border-neo-green/20 rounded-lg p-4">
@@ -254,15 +265,19 @@ const Plans: React.FC = () => {
                 </button>
 
                 <button 
-                    onClick={() => setSelectedPlan('income')}
-                    className={`relative p-6 rounded-xl border transition-all duration-300 text-left group overflow-hidden ${selectedPlan === 'income' ? 'bg-neo-green/10 border-neo-green' : 'bg-neo-dark border-gray-800 hover:border-gray-600'}`}
+                    disabled
+                    className="relative p-6 rounded-xl border transition-all duration-300 text-left group overflow-hidden bg-neo-dark/30 border-gray-800/50 opacity-60 cursor-not-allowed"
                 >
-                    <div className="flex justify-between items-start mb-4">
-                        <RefreshCw className={`${selectedPlan === 'income' ? 'text-neo-green' : 'text-gray-500'} group-hover:text-neo-green transition-colors`} size={32} />
-                        {selectedPlan === 'income' && <div className="w-2 h-2 rounded-full bg-neo-green animate-pulse"></div>}
+                    <div className="absolute top-2 right-2">
+                        <span className="bg-neo-green/20 text-neo-green text-[10px] font-mono font-bold px-2 py-1 rounded border border-neo-green/40">
+                            EM BREVE
+                        </span>
                     </div>
-                    <h3 className={`text-lg font-display font-bold mb-2 ${selectedPlan === 'income' ? 'text-white' : 'text-gray-400'}`}>Renda Flexível</h3>
-                    <p className={`text-sm font-mono leading-relaxed ${selectedPlan === 'income' ? 'text-gray-300' : 'text-gray-400'}`}>
+                    <div className="flex justify-between items-start mb-4">
+                        <RefreshCw className="text-gray-600" size={32} />
+                    </div>
+                    <h3 className="text-lg font-display font-bold mb-2 text-gray-500">Renda Flexível</h3>
+                    <p className="text-sm font-mono leading-relaxed text-gray-600">
                         Controle total. Escolha quanto sacar (1-10%) e quanto reinvestir mensalmente para crescer o bolo.
                     </p>
                 </button>
@@ -292,11 +307,14 @@ const Plans: React.FC = () => {
                                     <div className="relative">
                                         <input
                                             type="number"
-                                            min="10"
+                                            min="100"
                                             max="500000"
                                             step="10"
                                             value={amount || ''}
-                                            onChange={(e) => setAmount(Number(e.target.value) || 0)}
+                                            onChange={(e) => {
+                                                const val = Number(e.target.value) || 0;
+                                                setAmount(Math.min(val, 500000));
+                                            }}
                                             className="font-mono text-white text-xl font-bold bg-neo-black/50 px-4 py-1 rounded border-2 border-neo-green/20 hover:border-neo-green/40 focus:border-neo-green focus:outline-none transition-colors w-48 text-right"
                                         />
                                         <div className="absolute -bottom-5 right-0 text-xs text-neo-green/60 font-mono flex items-center gap-1">
@@ -306,12 +324,12 @@ const Plans: React.FC = () => {
                                 </div>
                                 <div className="relative">
                                     <input 
-                                        type="range" min="10" max="500000" step="10"
-                                        value={amount} onChange={(e) => setAmount(Number(e.target.value))}
+                                        type="range" min="100" max="500000" step="10"
+                                        value={amount} onChange={(e) => setAmount(Math.min(Number(e.target.value), 500000))}
                                         className="w-full h-2 bg-neo-black rounded-lg appearance-none cursor-pointer border border-neo-green/20 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:bg-neo-green [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-black hover:[&::-webkit-slider-thumb]:scale-110 transition-all"
                                     />
                                     <div className="flex justify-between text-xs text-gray-500 font-mono mt-1">
-                                        <span>R$ 10</span>
+                                        <span>R$ 100</span>
                                         <span>R$ 500.000</span>
                                     </div>
                                 </div>
