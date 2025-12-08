@@ -360,7 +360,7 @@ const Plans: React.FC = () => {
                                         </span>
                                     </div>
                                     <div className="flex justify-between gap-2">
-                                        {[30, 60, 90, 180, 360].map((d) => (
+                                        {[60, 90, 180, 360].map((d) => (
                                             <button
                                                 key={d}
                                                 onClick={() => setDays(d)}
