@@ -121,7 +121,7 @@ const Contact: React.FC<ContactProps> = ({ onTermsClick }) => {
 
                     <div className="mt-12 p-4 bg-neo-black/50 rounded border-l-2 border-neo-green">
                         <p className="text-neo-green text-xs font-mono">
-                            <span className="animate-pulse">●</span> Respondemos em até 24 horas úteis.
+                            <span className="animate-pulse">●</span> Respondemos em até 2 dias úteis.
                         </p>
                     </div>
                 </div>
